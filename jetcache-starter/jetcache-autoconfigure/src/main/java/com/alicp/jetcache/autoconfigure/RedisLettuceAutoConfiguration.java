@@ -10,6 +10,7 @@ import com.alicp.jetcache.redis.lettuce.RedisLettuceCacheBuilder;
 import io.lettuce.core.*;
 import io.lettuce.core.api.StatefulConnection;
 import io.lettuce.core.cluster.ClusterClientOptions;
+import io.lettuce.core.cluster.ClusterTopologyRefreshOptions;
 import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.masterslave.MasterSlave;
@@ -19,6 +20,7 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 
 import java.net.URI;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -97,8 +99,13 @@ public class RedisLettuceAutoConfiguration {
                         connection = c;
                     } else {
                         client = RedisClusterClient.create(uriList);
-                        ((RedisClusterClient) client).setOptions(ClusterClientOptions.builder().
-                                disconnectedBehavior(ClientOptions.DisconnectedBehavior.REJECT_COMMANDS).build());
+                        ((RedisClusterClient) client).setOptions(ClusterClientOptions.builder()
+                                .topologyRefreshOptions(ClusterTopologyRefreshOptions.builder()
+                                        .enableAllAdaptiveRefreshTriggers()
+                                        .adaptiveRefreshTriggersTimeout(Duration.ofSeconds(30))
+                                        .enablePeriodicRefresh(Duration.ofSeconds(60))
+                                        .build())
+                                .disconnectedBehavior(ClientOptions.DisconnectedBehavior.REJECT_COMMANDS).build());
                         if (readFrom != null) {
                             StatefulRedisClusterConnection c = ((RedisClusterClient) client).connect(new JetCacheCodec());
                             c.setReadFrom(readFrom);
