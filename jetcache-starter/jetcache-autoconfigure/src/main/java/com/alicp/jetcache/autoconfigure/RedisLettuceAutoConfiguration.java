@@ -105,6 +105,7 @@ public class RedisLettuceAutoConfiguration {
                                         .adaptiveRefreshTriggersTimeout(Duration.ofSeconds(30))
                                         .enablePeriodicRefresh(Duration.ofSeconds(60))
                                         .build())
+                                .validateClusterNodeMembership(false)
                                 .disconnectedBehavior(ClientOptions.DisconnectedBehavior.REJECT_COMMANDS).build());
                         if (readFrom != null) {
                             StatefulRedisClusterConnection c = ((RedisClusterClient) client).connect(new JetCacheCodec());
