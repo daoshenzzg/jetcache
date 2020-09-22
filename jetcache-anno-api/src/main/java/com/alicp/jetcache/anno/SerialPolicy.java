@@ -13,6 +13,8 @@ public interface SerialPolicy {
 
     String KRYO = "KRYO";
 
+    String LZ4 = "LZ4";
+
     Function<Object, byte[]> encoder();
 
     Function<byte[], Object> decoder();

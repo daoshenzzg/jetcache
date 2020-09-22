@@ -41,6 +41,7 @@ public class CacheConfigUtil {
         cc.setSerialPolicy(anno.serialPolicy());
         cc.setKeyConvertor(anno.keyConvertor());
         cc.setKey(anno.key());
+        cc.setRandom(anno.random());
         cc.setDefineMethod(m);
 
         CacheRefresh cacheRefresh = m.getAnnotation(CacheRefresh.class);

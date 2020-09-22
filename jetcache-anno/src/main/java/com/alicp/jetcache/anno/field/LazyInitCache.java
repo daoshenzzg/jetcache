@@ -79,6 +79,7 @@ class LazyInitCache implements ProxyCache {
         cac.setLocalLimit(ann.localLimit());
         cac.setSerialPolicy(ann.serialPolicy());
         cac.setKeyConvertor(ann.keyConvertor());
+        cac.setRandom(ann.random());
 
         cac.setRefreshPolicy(refreshPolicy);
         cac.setPenetrationProtectConfig(protectConfig);

@@ -1,0 +1,9 @@
+2020-07-29
+    - Lettcue Enabling adaptive cluster topology view updates
+
+2020-09-22
+    - Remote Cache support random expire
+    - JetCache support lz4 encoder
+
+
+mvn deploy -DskipTests
