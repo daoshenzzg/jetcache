@@ -17,7 +17,6 @@ import com.alicp.jetcache.external.ExternalCacheBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -156,12 +155,8 @@ public class CacheContext {
         }
         cacheBuilder = (ExternalCacheBuilder) cacheBuilder.clone();
 
-        if (cachedAnnoConfig.getExpire() > 0) {
-            long expire = cachedAnnoConfig.getExpire();
-            if (cachedAnnoConfig.getRandom() > 0) {
-                expire += new Random().nextInt(cachedAnnoConfig.getRandom());
-            }
-            cacheBuilder.expireAfterWrite(expire, cachedAnnoConfig.getTimeUnit());
+        if (cachedAnnoConfig.getExpire() > 0 ) {
+            cacheBuilder.expireAfterWrite(cachedAnnoConfig.getExpire(), cachedAnnoConfig.getTimeUnit());
         }
 
         if (cacheBuilder.getConfig().getKeyPrefix() != null) {
@@ -195,11 +190,7 @@ public class CacheContext {
                 cachedAnnoConfig.getLocalExpire() > 0) {
             cacheBuilder.expireAfterWrite(cachedAnnoConfig.getLocalExpire(), cachedAnnoConfig.getTimeUnit());
         } else if (cachedAnnoConfig.getExpire() > 0) {
-            long expire = cachedAnnoConfig.getExpire();
-            if (cachedAnnoConfig.getRandom() > 0) {
-                expire += new Random().nextInt(cachedAnnoConfig.getRandom());
-            }
-            cacheBuilder.expireAfterWrite(expire, cachedAnnoConfig.getTimeUnit());
+            cacheBuilder.expireAfterWrite(cachedAnnoConfig.getExpire(), cachedAnnoConfig.getTimeUnit());
         }
         if (!CacheConsts.isUndefined(cachedAnnoConfig.getKeyConvertor())) {
             cacheBuilder.setKeyConvertor(configProvider.parseKeyConvertor(cachedAnnoConfig.getKeyConvertor()));

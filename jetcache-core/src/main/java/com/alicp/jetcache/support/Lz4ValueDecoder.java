@@ -40,7 +40,7 @@ public class Lz4ValueDecoder extends AbstractValueDecoder {
         ByteArrayInputStream bis = new ByteArrayInputStream(data);
         try (LZ4BlockInputStream in = new LZ4BlockInputStream(bis, decompressor)) {
             int count;
-            final byte[] buffer = new byte[2048];
+            final byte[] buffer = new byte[1024];
             while ((count = in.read(buffer)) != -1) {
                 bos.write(buffer, 0, count);
             }

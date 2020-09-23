@@ -68,7 +68,7 @@ public class Lz4ValueEncoder extends AbstractValueEncoder {
         LZ4Factory factory = LZ4Factory.fastestInstance();
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         LZ4Compressor compressor = factory.fastCompressor();
-        try (LZ4BlockOutputStream out = new LZ4BlockOutputStream(bos, 2048, compressor)) {
+        try (LZ4BlockOutputStream out = new LZ4BlockOutputStream(bos, 1024, compressor)) {
             out.write(data);
         } catch (Exception e) {
             StringBuilder sb = new StringBuilder("LZ4 compress error. ");

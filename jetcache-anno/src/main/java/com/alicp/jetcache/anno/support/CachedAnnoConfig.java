@@ -24,7 +24,6 @@ public class CachedAnnoConfig extends CacheAnnoConfig {
     private String serialPolicy;
     private String keyConvertor;
     private String postCondition;
-    private int random;
 
     private Function<Object, Boolean> postConditionEvaluator;
     private RefreshPolicy refreshPolicy;
@@ -133,13 +132,5 @@ public class CachedAnnoConfig extends CacheAnnoConfig {
 
     public void setLocalExpire(long localExpire) {
         this.localExpire = localExpire;
-    }
-
-    public int getRandom() {
-        return random;
-    }
-
-    public void setRandom(int random) {
-        this.random = random;
     }
 }
