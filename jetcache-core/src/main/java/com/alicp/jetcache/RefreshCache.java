@@ -115,7 +115,7 @@ public class RefreshCache<K, V> extends LoadingCache<K, V> {
             }
             Object taskId = getTaskId(key);
             RefreshTask refreshTask = taskMap.computeIfAbsent(taskId, tid -> {
-                logger.warn("add refresh task. interval={},  key={}", refreshMillis, key);
+                logger.debug("add refresh task. interval={},  key={}", refreshMillis, key);
                 RefreshTask task = new RefreshTask(taskId, key, loader);
                 task.lastAccessTime = System.currentTimeMillis();
                 ScheduledFuture<?> future = JetCacheExecutor.heavyIOExecutor().scheduleWithFixedDelay(
