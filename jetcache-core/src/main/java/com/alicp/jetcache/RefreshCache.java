@@ -101,16 +101,21 @@ public class RefreshCache<K, V> extends LoadingCache<K, V> {
         }
     }
 
-    protected void addOrUpdateRefreshTask(K key, CacheLoader<K,V> loader) {
+    protected void addOrUpdateRefreshTask(K key, CacheLoader<K, V> loader) {
         RefreshPolicy refreshPolicy = config.getRefreshPolicy();
         if (refreshPolicy == null) {
             return;
         }
         long refreshMillis = refreshPolicy.getRefreshMillis();
         if (refreshMillis > 0) {
+            int taskMapSize = taskMap.size();
+            if (!taskMap.containsKey(key) && taskMapSize >= JetCacheExecutor.getMaxTaskSize()) {
+                logger.debug("ignore refresh task. current task map size={}, key={}", taskMapSize, key);
+                return;
+            }
             Object taskId = getTaskId(key);
             RefreshTask refreshTask = taskMap.computeIfAbsent(taskId, tid -> {
-                logger.debug("add refresh task. interval={},  key={}", refreshMillis , key);
+                logger.warn("add refresh task. interval={},  key={}", refreshMillis, key);
                 RefreshTask task = new RefreshTask(taskId, key, loader);
                 task.lastAccessTime = System.currentTimeMillis();
                 ScheduledFuture<?> future = JetCacheExecutor.heavyIOExecutor().scheduleWithFixedDelay(
@@ -161,7 +166,7 @@ public class RefreshCache<K, V> extends LoadingCache<K, V> {
         }
 
         private void load() throws Throwable {
-            CacheLoader<K,V> l = loader == null? config.getLoader(): loader;
+            CacheLoader<K, V> l = loader == null ? config.getLoader() : loader;
             if (l != null) {
                 l = CacheUtil.createProxyLoader(cache, l, eventConsumer);
                 V v = l.load(key);
@@ -207,9 +212,9 @@ public class RefreshCache<K, V> extends LoadingCache<K, V> {
 
             // AbstractExternalCache buildKey method will not convert byte[]
             boolean lockSuccess = concreteCache.tryLockAndRun(lockKey, loadTimeOut, TimeUnit.MILLISECONDS, r);
-            if(!lockSuccess && multiLevelCache) {
+            if (!lockSuccess && multiLevelCache) {
                 JetCacheExecutor.heavyIOExecutor().schedule(
-                        () -> refreshUpperCaches(key), (long)(0.2 * refreshMillis), TimeUnit.MILLISECONDS);
+                        () -> refreshUpperCaches(key), (long) (0.2 * refreshMillis), TimeUnit.MILLISECONDS);
             }
         }
 

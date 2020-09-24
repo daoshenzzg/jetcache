@@ -10,7 +10,7 @@ import java.util.concurrent.*;
 public class JetCacheExecutor {
     protected static ScheduledExecutorService defaultExecutor;
     protected static ScheduledExecutorService heavyIOExecutor;
-
+    protected static int maxTaskSize = 3000;
     private static int threadCount;
 
     static {
@@ -69,5 +69,13 @@ public class JetCacheExecutor {
 
     public static void setHeavyIOExecutor(ScheduledExecutorService heavyIOExecutor) {
         JetCacheExecutor.heavyIOExecutor = heavyIOExecutor;
+    }
+
+    public static int getMaxTaskSize() {
+        return maxTaskSize;
+    }
+
+    public static void setMaxTaskSize(int maxTaskSize) {
+        JetCacheExecutor.maxTaskSize = maxTaskSize;
     }
 }
