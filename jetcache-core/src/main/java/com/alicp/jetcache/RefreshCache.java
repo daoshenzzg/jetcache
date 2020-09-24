@@ -108,12 +108,12 @@ public class RefreshCache<K, V> extends LoadingCache<K, V> {
         }
         long refreshMillis = refreshPolicy.getRefreshMillis();
         if (refreshMillis > 0) {
+            Object taskId = getTaskId(key);
             int taskMapSize = taskMap.size();
-            if (!taskMap.containsKey(key) && taskMapSize >= JetCacheExecutor.getMaxTaskSize()) {
+            if (!taskMap.containsKey(taskId) && taskMapSize >= JetCacheExecutor.getMaxTaskSize()) {
                 logger.debug("ignore refresh task. current task map size={}, key={}", taskMapSize, key);
                 return;
             }
-            Object taskId = getTaskId(key);
             RefreshTask refreshTask = taskMap.computeIfAbsent(taskId, tid -> {
                 logger.debug("add refresh task. interval={},  key={}", refreshMillis, key);
                 RefreshTask task = new RefreshTask(taskId, key, loader);
